@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect } from "react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import CustomCursor from "./components/CustomCursor";
 import EasterEgg from "./components/EasterEgg";
 import Nav from "./components/Nav";
@@ -39,6 +40,7 @@ export default function App() {
       <SkillsSection />
       <ProjectsSection />
       <ContactSection />
+      <SpeedInsights />
     </div>
   );
 }
