@@ -4,7 +4,7 @@ interface Project {
   id: string;
   title: string;
   desc: string;
-  type: "Web" | "Data";
+  type: "Data";
   tech: string[];
   preview: "chart" | "code" | "dashboard" | "graph";
   href: string;
@@ -13,43 +13,43 @@ interface Project {
 
 const projects: Project[] = [
   {
-    id: "p1",
-    title: "DataViz Platform",
-    desc: "Plateforme de visualisation de données temps réel avec dashboards interactifs et alertes intelligentes.",
+    id: "churn-analysis-project",
+    title: "Customer Churn Analysis",
+    desc: "Analyse de 7 043 clients télécom, comparaison de modèles de risque et simulateur de scoring pour orienter les actions de fidélisation.",
     type: "Data",
-    tech: ["Python", "FastAPI", "Recharts", "PostgreSQL"],
-    preview: "chart",
-    href: "#",
+    tech: ["Python", "pandas", "scikit-learn", "Streamlit"],
+    preview: "graph",
+    href: "https://github.com/opluriel/churn-analysis-project",
     accent: "var(--violet)",
   },
   {
-    id: "p2",
-    title: "DevFlow UI",
-    desc: "Design system et composants UI modulaires pour applications SaaS B2B, avec thèmes dynamiques.",
-    type: "Web",
-    tech: ["React", "TypeScript", "Tailwind", "Storybook"],
-    preview: "code",
-    href: "#",
+    id: "data-analystic-project",
+    title: "Global Layoffs Analysis",
+    desc: "Nettoyage et exploration SQL, puis modélisation et dashboard Power BI sur les licenciements mondiaux de 2020 à 2023.",
+    type: "Data",
+    tech: ["MySQL", "SQL", "Power BI", "DAX"],
+    preview: "chart",
+    href: "https://github.com/opluriel/data-analystic-project",
     accent: "var(--cyan)",
   },
   {
-    id: "p3",
-    title: "Prédiction Churn ML",
-    desc: "Modèle de machine learning pour prédire le churn client avec un taux de précision de 91%.",
+    id: "data-professional-survey-dashboard",
+    title: "Data Professionals Survey",
+    desc: "Dashboard Power BI basé sur 630 réponses pour explorer les salaires, les outils utilisés et la satisfaction des professionnels de la donnée.",
     type: "Data",
-    tech: ["Python", "Scikit-learn", "Pandas", "Streamlit"],
+    tech: ["Power BI", "Power Query", "DAX", "Excel"],
     preview: "graph",
-    href: "#",
+    href: "https://github.com/opluriel/data-professional-survey-dashboard",
     accent: "var(--violet)",
   },
   {
-    id: "p4",
-    title: "Commerce Headless",
-    desc: "E-commerce headless ultra-performant avec Next.js, Sanity CMS et paiements Stripe.",
-    type: "Web",
-    tech: ["Next.js", "Sanity", "Stripe", "Vercel"],
-    preview: "dashboard",
-    href: "#",
+    id: "bike-buyers-analysis",
+    title: "Bike Buyers Analysis",
+    desc: "Analyse Excel de 1 000 clients pour comparer les taux d’achat de vélos selon l’âge, la distance domicile-travail et d’autres profils.",
+    type: "Data",
+    tech: ["Excel", "Tableaux croisés", "Dashboard"],
+    preview: "chart",
+    href: "https://github.com/opluriel/bike-buyers-analysis",
     accent: "var(--cyan)",
   },
 ];
@@ -59,7 +59,7 @@ function MiniPreview({ type, accent }: { type: Project["preview"]; accent: strin
     const bars = [40, 70, 50, 90, 60, 85, 45];
     return (
       <div className="h-full flex items-end gap-1 px-4 pb-4 pt-6 relative">
-        <div className="absolute top-3 left-4 font-mono text-xs opacity-40" style={{ color: accent }}>revenue_2024.csv</div>
+        <div className="absolute top-3 left-4 font-mono text-xs opacity-40" style={{ color: accent }}>analyse.csv</div>
         {bars.map((h, i) => (
           <div key={i} className="flex-1 rounded-sm transition-all duration-300" style={{
             height: `${h}%`, background: `linear-gradient(to top, ${accent}, ${accent}44)`,
@@ -125,9 +125,9 @@ function MiniPreview({ type, accent }: { type: Project["preview"]; accent: strin
 }
 
 function TiltCard({ project }: { project: Project }) {
-  const cardRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLAnchorElement>(null);
 
-  const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  const onMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
     const card = cardRef.current;
     if (!card) return;
     const rect = card.getBoundingClientRect();
@@ -145,10 +145,14 @@ function TiltCard({ project }: { project: Project }) {
   };
 
   return (
-    <div
+    <a
       ref={cardRef}
-      className="project-card border rounded-sm overflow-hidden cursor-pointer group"
-      style={{ borderColor: `${project.accent}22`, background: "var(--card)", transition: "transform 0.15s ease, box-shadow 0.3s ease" }}
+      href={project.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={`Voir ${project.title} sur GitHub (nouvel onglet)`}
+      className="project-card block border rounded-sm overflow-hidden cursor-pointer group focus-visible:outline-2 focus-visible:outline-offset-4"
+      style={{ borderColor: `${project.accent}22`, background: "var(--card)", color: "var(--fg)", textDecoration: "none", transition: "transform 0.15s ease, box-shadow 0.3s ease" }}
       onMouseMove={onMove}
       onMouseLeave={onLeave}
     >
@@ -186,7 +190,7 @@ function TiltCard({ project }: { project: Project }) {
         {/* Bottom bar */}
         <div className="absolute bottom-0 left-0 h-0.5 w-0 group-hover:w-full transition-all duration-500" style={{ background: project.accent }} />
       </div>
-    </div>
+    </a>
   );
 }
 
@@ -223,7 +227,7 @@ export default function ProjectsSection() {
         </div>
 
         <div className="reveal mt-12 text-center">
-          <a href="#" data-hover className="font-mono text-sm border px-8 py-3 inline-block transition-all duration-300 hover:bg-[rgba(0,255,136,0.08)]"
+          <a href="https://github.com/opluriel?tab=repositories" target="_blank" rel="noopener noreferrer" data-hover className="font-mono text-sm border px-8 py-3 inline-block transition-all duration-300 hover:bg-[rgba(0,255,136,0.08)]"
             style={{ borderColor: "var(--border)", color: "var(--fg-muted)" }}>
             voir tous les projets →
           </a>

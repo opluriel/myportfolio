@@ -8,16 +8,16 @@ interface Stat {
 }
 
 const stats: Stat[] = [
-  { label: "Années XP", value: 4, suffix: "ans", color: "var(--primary)" },
-  { label: "Projets livrés", value: 23, suffix: "", color: "var(--violet)" },
+  { label: "Années XP", value: 2, suffix: "ans", color: "var(--primary)" },
+  { label: "Projets livrés", value: 10, suffix: "", color: "var(--violet)" },
   { label: "Langages", value: 8, suffix: "+", color: "var(--cyan)" },
-  { label: "Datasets analysés", value: 150, suffix: "+", color: "var(--primary)" },
+  { label: "Datasets analysés", value: 20, suffix: "+", color: "var(--primary)" },
 ];
 
 const sysInfo = [
   { key: "OS", val: "ArchLinux 6.8.0" },
   { key: "Kernel", val: "creative-mind-x86_64" },
-  { key: "Uptime", val: "4 years, 3 months" },
+  { key: "Uptime", val: "1 years, 3 months" },
   { key: "Shell", val: "zsh 5.9 + fish" },
   { key: "CPU", val: "Problem Solver × 8 cores" },
   { key: "Memory", val: "∞ GB curiosity used" },
@@ -104,7 +104,7 @@ export default function AboutSection() {
                 {/* ASCII art / header */}
                 <div className="flex gap-6 mb-6">
                   <div className="font-mono text-xs leading-none whitespace-pre" style={{ color: "var(--primary)" }}>
-{`██████╗ ███████╗██╗   ██╗
+                    {`██████╗ ███████╗██╗   ██╗
 ██╔══██╗██╔════╝██║   ██║
 ██║  ██║█████╗  ██║   ██║
 ██║  ██║██╔══╝  ╚██╗ ██╔╝

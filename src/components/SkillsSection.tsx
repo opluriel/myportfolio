@@ -5,24 +5,23 @@ import {
 import { useEffect, useRef, type CSSProperties } from "react";
 
 const radarData = [
-  { skill: "React / Next", web: 96, data: 45 },
-  { skill: "TypeScript", web: 92, data: 40 },
+  { skill: "React / Next", web: 86, data: 35 },
+  { skill: "TypeScript", web: 82, data: 30 },
   { skill: "Node.js", web: 88, data: 35 },
   { skill: "CSS / Design", web: 85, data: 20 },
   { skill: "Python", web: 60, data: 95 },
   { skill: "SQL", web: 55, data: 92 },
   { skill: "Pandas/NumPy", web: 30, data: 90 },
-  { skill: "ML / Stats", web: 20, data: 85 },
 ];
 
 const barSkills = [
   { name: "React.js", pct: 96, type: "web" },
   { name: "TypeScript", pct: 92, type: "web" },
   { name: "Node.js / REST", pct: 88, type: "web" },
-  { name: "Python", pct: 95, type: "data" },
+  { name: "Python", pct: 85, type: "data" },
   { name: "SQL / PostgreSQL", pct: 91, type: "data" },
-  { name: "Pandas / NumPy", pct: 90, type: "data" },
-  { name: "Data Viz (D3/Recharts)", pct: 84, type: "web" },
+  { name: "Pandas / NumPy", pct: 70, type: "data" },
+  { name: "Data Viz (D3/Recharts)", pct: 64, type: "web" },
   { name: "Machine Learning", pct: 78, type: "data" },
 ];
 
