@@ -234,7 +234,7 @@ export default function ContactSection() {
               ) : (
                 <div className="px-4 py-3 border-t flex items-center gap-3" style={{ borderColor: "rgba(0,255,136,0.1)", background: "#040810" }}>
                   <span className="font-mono text-xs" style={{ color: "var(--primary)" }}>✓ Message envoyé</span>
-                  <button onClick={() => { setLines(GREETING); setStage("name"); setForm({ name: "", email: "", message: "" }); setSent(false); setTimeout(() => addLine({ type: "prompt", text: "  > Votre nom :" }), 10); }}
+                  <button onClick={() => { setLines(GREETING); setStage("name"); setForm({ name: "", email: "", message: "" }); setHoneypot(""); setSent(false); setTimeout(() => addLine({ type: "prompt", text: "  > Votre nom :" }), 10); }}
                     className="font-mono text-xs ml-auto px-3 py-1 border transition-all duration-200 hover:border-[var(--primary)]"
                     style={{ borderColor: "var(--border)", color: "var(--fg-muted)" }}>
                     reset
