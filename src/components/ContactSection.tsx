@@ -1,4 +1,6 @@
 import { useState, useRef, useEffect } from "react";
+import { sendContact } from "../services/api";
+import type { ContactForm } from "../types";
 
 type Line = { type: "prompt" | "output" | "success" | "error"; text: string };
 
@@ -20,6 +22,7 @@ export default function ContactSection() {
   const [stage, setStage] = useState<"name" | "email" | "message" | "done">("name");
   const [input, setInput] = useState("");
   const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [honeypot, setHoneypot] = useState("");
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
   const termRef = useRef<HTMLDivElement>(null);
@@ -39,17 +42,24 @@ export default function ContactSection() {
     termRef.current?.scrollTo({ top: termRef.current.scrollHeight, behavior: "smooth" });
   }, [lines]);
 
-  const handleSend = async () => {
+  const handleSend = async (contact: ContactForm) => {
     setSending(true);
     addLine({ type: "output", text: "" });
     addLine({ type: "output", text: "  Envoi en cours..." });
-    await new Promise(r => setTimeout(r, 1200));
-    addLine({ type: "success", text: "  ✓ POST /api/contact → 200 OK" });
-    addLine({ type: "success", text: `  ✓ Message reçu de ${form.name}` });
-    addLine({ type: "output", text: "" });
-    addLine({ type: "output", text: "  Je vous réponds sous 24h. Merci !" });
-    setSending(false);
-    setSent(true);
+    try {
+      await sendContact(contact);
+      addLine({ type: "success", text: "  ✓ Message transmis avec succès." });
+      addLine({ type: "output", text: "" });
+      addLine({ type: "output", text: "  Je vous réponds sous 24h. Merci !" });
+      setStage("done");
+      setSent(true);
+    } catch (error) {
+      addLine({ type: "error", text: `  ✗ ${error instanceof Error ? error.message : "Échec de l'envoi. Réessayez plus tard."}` });
+      setStage("message");
+      setInput(contact.message);
+    } finally {
+      setSending(false);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -74,13 +84,18 @@ export default function ContactSection() {
     addLine({ type: "prompt", text: `  > ${val}` });
 
     if (stage === "name") {
+      if (val.length > 100) {
+        addLine({ type: "error", text: "  ✗ Nom trop long (100 caractères maximum). Réessayez :" });
+        setInput("");
+        return;
+      }
       setForm(f => ({ ...f, name: val }));
       addLine({ type: "output", text: `  Bonjour, ${val} !` });
       addLine({ type: "output", text: "" });
       addLine({ type: "prompt", text: "  > Votre email :" });
       setStage("email");
     } else if (stage === "email") {
-      if (!val.includes("@")) {
+      if (val.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
         addLine({ type: "error", text: "  ✗ Email invalide. Réessayez :" });
       } else {
         setForm(f => ({ ...f, email: val }));
@@ -89,6 +104,11 @@ export default function ContactSection() {
         setStage("message");
       }
     } else if (stage === "message") {
+      if (val.length > 5000) {
+        addLine({ type: "error", text: "  ✗ Message trop long (5 000 caractères maximum). Réessayez :" });
+        setInput("");
+        return;
+      }
       setForm(f => ({ ...f, message: val }));
       addLine({ type: "output", text: "" });
       addLine({ type: "output", text: `  Récapitulatif :` });
@@ -96,8 +116,7 @@ export default function ContactSection() {
       addLine({ type: "output", text: `  • Email   : ${form.email}` });
       addLine({ type: "output", text: `  • Message : ${val.slice(0, 40)}${val.length > 40 ? "..." : ""}` });
       addLine({ type: "output", text: "" });
-      setStage("done");
-      handleSend();
+      void handleSend({ ...form, message: val, website: honeypot });
     }
 
     setInput("");
@@ -186,6 +205,16 @@ export default function ContactSection() {
               {/* Input */}
               {!sent ? (
                 <form onSubmit={handleSubmit} className="flex items-center gap-2 px-4 py-3 border-t" style={{ borderColor: "rgba(0,255,136,0.1)", background: "#040810" }}>
+                  <input
+                    type="text"
+                    name="website"
+                    value={honeypot}
+                    onChange={event => setHoneypot(event.target.value)}
+                    tabIndex={-1}
+                    autoComplete="off"
+                    aria-hidden="true"
+                    className="absolute w-px h-px overflow-hidden opacity-0"
+                  />
                   <span className="font-mono text-xs flex-shrink-0" style={{ color: "var(--primary)" }}>
                     {prompt}&nbsp;<span style={{ color: "var(--fg-muted)" }}>$</span>
                   </span>
