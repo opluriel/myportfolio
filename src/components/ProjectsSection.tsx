@@ -214,13 +214,13 @@ export default function ProjectsSection() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {projects.map((project, index) => {
               const layoutClasses = [
-                "reveal",
-                "reveal lg:col-span-1 lg:mt-12",
-                "reveal lg:row-span-1 lg:-mt-4",
-                "reveal md:col-span-2 lg:col-span-1 lg:col-start-2",
+                "",
+                "lg:col-span-1 lg:mt-12",
+                "lg:row-span-1 lg:-mt-4",
+                "md:col-span-2 lg:col-span-1 lg:col-start-2",
               ];
               return (
-                <div key={project.id} className={layoutClasses[index] ?? "reveal"} style={{ transitionDelay: `${index * 80}ms` }}>
+                <div key={project.id} className={layoutClasses[index] ?? ""} style={{ transitionDelay: `${index * 80}ms` }}>
                   <TiltCard project={project} />
                 </div>
               );
