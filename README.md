@@ -18,7 +18,7 @@ Copy `.env.example` to `.env.local` for local development. Set the following val
 | `EMAIL_FROM` | A sender address on a domain verified in Resend, e.g. `Portfolio <contact@your-domain.example>` |
 | `CONTACT_TO_EMAIL` | Destination for contact notifications (currently `adamadevmail@gmail.com`) |
 | `RATE_LIMIT_SECRET` | A private random value of at least 32 characters; generate one with `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"` |
-| `CORS_ORIGINS` | Comma-separated origins without trailing slashes; currently `https://myportfolio-livid-iota.vercel.app,http://localhost:5173` |
+| `CORS_ORIGINS` | Comma-separated origins without trailing slashes. In Vercel Production use only `https://myportfolio-livid-iota.vercel.app`; add `http://localhost:5173` only to local `.env.local` (or a local/Preview environment where needed). |
 
 Do not commit `.env.local` or place server credentials in Vite variables. `.env.example` contains placeholders for secrets.
 
