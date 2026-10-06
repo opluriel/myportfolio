@@ -230,6 +230,9 @@ export default function ContactSection() {
                     spellCheck={false}
                   />
                   <span className="cursor-blink" style={{ color: "var(--primary)" }}>█</span>
+                  <button type="submit" className="sr-only">
+                    Valider
+                  </button>
                 </form>
               ) : (
                 <div className="px-4 py-3 border-t flex items-center gap-3" style={{ borderColor: "rgba(0,255,136,0.1)", background: "#040810" }}>
