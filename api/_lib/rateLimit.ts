@@ -1,6 +1,6 @@
 import { createHmac } from "node:crypto";
-import { ApiError } from "./http";
-import { getServiceSupabase } from "./supabase";
+import { ApiError } from "./http.js";
+import { getServiceSupabase } from "./supabase.js";
 
 const LIMIT = 5;
 const WINDOW_MS = 60 * 60 * 1000;
