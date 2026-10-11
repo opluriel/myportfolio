@@ -1,6 +1,6 @@
-import type { ApiRequest } from "./http";
-import { ApiError } from "./http";
-import { getAuthSupabase } from "./supabase";
+import type { ApiRequest } from "./http.js";
+import { ApiError } from "./http.js";
+import { getAuthSupabase } from "./supabase.js";
 
 export async function requireAdmin(req: ApiRequest): Promise<string> {
   const authorization = req.headers.authorization;

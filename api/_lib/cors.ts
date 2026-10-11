@@ -1,5 +1,5 @@
-import type { ApiRequest, ApiResponse } from "./http";
-import { sendJson } from "./http";
+import type { ApiRequest, ApiResponse } from "./http.js";
+import { sendJson } from "./http.js";
 
 function allowedOrigins(): Set<string> {
   const configured = process.env.CORS_ORIGINS;
