@@ -1,58 +1,6 @@
-import { useRef } from "react";
-
-interface Project {
-  id: string;
-  title: string;
-  desc: string;
-  type: "Data";
-  tech: string[];
-  preview: "chart" | "code" | "dashboard" | "graph";
-  href: string;
-  accent: string;
-}
-
-const projects: Project[] = [
-  {
-    id: "churn-analysis-project",
-    title: "Customer Churn Analysis",
-    desc: "Analyse de 7 043 clients télécom, comparaison de modèles de risque et simulateur de scoring pour orienter les actions de fidélisation.",
-    type: "Data",
-    tech: ["Python", "pandas", "scikit-learn", "Streamlit"],
-    preview: "graph",
-    href: "https://github.com/opluriel/churn-analysis-project",
-    accent: "var(--violet)",
-  },
-  {
-    id: "data-analystic-project",
-    title: "Global Layoffs Analysis",
-    desc: "Nettoyage et exploration SQL, puis modélisation et dashboard Power BI sur les licenciements mondiaux de 2020 à 2023.",
-    type: "Data",
-    tech: ["MySQL", "SQL", "Power BI", "DAX"],
-    preview: "chart",
-    href: "https://github.com/opluriel/data-analystic-project",
-    accent: "var(--cyan)",
-  },
-  {
-    id: "data-professional-survey-dashboard",
-    title: "Data Professionals Survey",
-    desc: "Dashboard Power BI basé sur 630 réponses pour explorer les salaires, les outils utilisés et la satisfaction des professionnels de la donnée.",
-    type: "Data",
-    tech: ["Power BI", "Power Query", "DAX", "Excel"],
-    preview: "graph",
-    href: "https://github.com/opluriel/data-professional-survey-dashboard",
-    accent: "var(--violet)",
-  },
-  {
-    id: "bike-buyers-analysis",
-    title: "Bike Buyers Analysis",
-    desc: "Analyse Excel de 1 000 clients pour comparer les taux d’achat de vélos selon l’âge, la distance domicile-travail et d’autres profils.",
-    type: "Data",
-    tech: ["Excel", "Tableaux croisés", "Dashboard"],
-    preview: "chart",
-    href: "https://github.com/opluriel/bike-buyers-analysis",
-    accent: "var(--cyan)",
-  },
-];
+import { useCallback, useEffect, useRef, useState } from "react";
+import { getProjects } from "../services/api";
+import type { Project } from "../types";
 
 function MiniPreview({ type, accent }: { type: Project["preview"]; accent: string }) {
   if (type === "chart") {
@@ -195,6 +143,39 @@ function TiltCard({ project }: { project: Project }) {
 }
 
 export default function ProjectsSection() {
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const loadProjects = useCallback(async () => {
+    setLoading(true);
+    setError("");
+    try {
+      setProjects(await getProjects());
+    } catch (loadError) {
+      setError(loadError instanceof Error ? loadError.message : "Impossible de charger les projets.");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    let mounted = true;
+    getProjects()
+      .then(data => {
+        if (mounted) setProjects(data);
+      })
+      .catch(loadError => {
+        if (mounted) setError(loadError instanceof Error ? loadError.message : "Impossible de charger les projets.");
+      })
+      .finally(() => {
+        if (mounted) setLoading(false);
+      });
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   return (
     <section id="projects" className="py-28 px-8 md:px-16 lg:px-24 relative overflow-hidden" style={{ background: "var(--bg)" }}>
       <div className="absolute top-1/2 right-0 w-96 h-96 pointer-events-none"
@@ -206,25 +187,46 @@ export default function ProjectsSection() {
           <h2 className="font-mono font-bold text-4xl" style={{ color: "var(--fg)" }}>Projets</h2>
           <div className="h-px flex-1 max-w-xs" style={{ background: "linear-gradient(to right, var(--border), transparent)" }} />
           <span className="font-mono text-xs px-2 py-1 border" style={{ borderColor: "var(--cyan)", color: "var(--cyan)" }}>
-            4 FEATURED
+            {loading ? "… FEATURED" : `${projects.length} FEATURED`}
           </span>
         </div>
 
         {/* Asymmetric grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="reveal" style={{ transitionDelay: "0ms" }}>
-            <TiltCard project={projects[0]} />
+        {loading && (
+          <p className="font-mono text-sm text-center py-8" style={{ color: "var(--fg-muted)" }} role="status">
+            Chargement des projets…
+          </p>
+        )}
+        {!loading && error && (
+          <div className="font-mono text-sm text-center py-8" style={{ color: "var(--fg-muted)" }} role="alert">
+            <p>{error}</p>
+            <button onClick={() => void loadProjects()} className="mt-3 underline" style={{ color: "var(--cyan)" }}>
+              Réessayer
+            </button>
           </div>
-          <div className="reveal lg:col-span-1 lg:mt-12" style={{ transitionDelay: "80ms" }}>
-            <TiltCard project={projects[1]} />
+        )}
+        {!loading && !error && projects.length === 0 && (
+          <p className="font-mono text-sm text-center py-8" style={{ color: "var(--fg-muted)" }}>
+            Aucun projet publié pour le moment.
+          </p>
+        )}
+        {!loading && !error && projects.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {projects.map((project, index) => {
+              const layoutClasses = [
+                "",
+                "lg:col-span-1 lg:mt-12",
+                "lg:row-span-1 lg:-mt-4",
+                "md:col-span-2 lg:col-span-1 lg:col-start-2",
+              ];
+              return (
+                <div key={project.id} className={layoutClasses[index] ?? ""} style={{ transitionDelay: `${index * 80}ms` }}>
+                  <TiltCard project={project} />
+                </div>
+              );
+            })}
           </div>
-          <div className="reveal lg:row-span-1 lg:-mt-4" style={{ transitionDelay: "160ms" }}>
-            <TiltCard project={projects[2]} />
-          </div>
-          <div className="reveal md:col-span-2 lg:col-span-1 lg:col-start-2" style={{ transitionDelay: "240ms" }}>
-            <TiltCard project={projects[3]} />
-          </div>
-        </div>
+        )}
 
         <div className="reveal mt-12 text-center">
           <a href="https://github.com/opluriel?tab=repositories" target="_blank" rel="noopener noreferrer" data-hover className="font-mono text-sm border px-8 py-3 inline-block transition-all duration-300 hover:bg-[rgba(0,255,136,0.08)]"
