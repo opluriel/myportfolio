@@ -1,8 +1,8 @@
-import { applyCors, handleOptions } from "../_lib/cors";
-import { requireAdmin } from "../_lib/auth";
-import { ApiError, readJsonBody, sendApiError, sendJson, type ApiRequest, type ApiResponse } from "../_lib/http";
-import { getServiceSupabase } from "../_lib/supabase";
-import { updateProjectSchema } from "../_lib/validation";
+import { applyCors, handleOptions } from "../_lib/cors.js";
+import { requireAdmin } from "../_lib/auth.js";
+import { ApiError, readJsonBody, sendApiError, sendJson, type ApiRequest, type ApiResponse } from "../_lib/http.js";
+import { getServiceSupabase } from "../_lib/supabase.js";
+import { updateProjectSchema } from "../_lib/validation.js";
 
 const publicProjectFields = "id,title,description,project_type,technologies,preview_type,url,accent";
 

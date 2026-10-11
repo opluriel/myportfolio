@@ -1,10 +1,10 @@
 import { Resend } from "resend";
-import { applyCors, handleOptions } from "./_lib/cors";
-import { ApiError, readJsonBody, sendApiError, sendJson, type ApiRequest, type ApiResponse } from "./_lib/http";
-import { getClientIp, enforceContactRateLimit } from "./_lib/rateLimit";
-import { escapeHtml, sanitizeText } from "./_lib/sanitize";
-import { getServiceSupabase } from "./_lib/supabase";
-import { contactSchema } from "./_lib/validation";
+import { applyCors, handleOptions } from "./_lib/cors.js";
+import { ApiError, readJsonBody, sendApiError, sendJson, type ApiRequest, type ApiResponse } from "./_lib/http.js";
+import { getClientIp, enforceContactRateLimit } from "./_lib/rateLimit.js";
+import { escapeHtml, sanitizeText } from "./_lib/sanitize.js";
+import { getServiceSupabase } from "./_lib/supabase.js";
+import { contactSchema } from "./_lib/validation.js";
 
 function requiredEnv(name: string): string {
   const value = process.env[name];
